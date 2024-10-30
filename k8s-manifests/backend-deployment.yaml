@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend
+        image: giladaslan9/backend:latest
+        ports:
+        - containerPort: 3001  # Update to match the backend listening port
+        env:                     # Add this section
+          - name: POSTGRES_USER
+            value: "postgres"   # Match with postgres-deployment.yaml
+          - name: POSTGRES_PASSWORD
+            value: "password"    # Match with postgres-deployment.yaml
+          - name: POSTGRES_DB
+            value: "votes"        # Ensure this matches if used
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+---
+# backend-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-svc
+spec:
+  type: ClusterIP
+  ports:
+    - port: 3001
+      targetPort: 3001
+  selector:
+    app: backend

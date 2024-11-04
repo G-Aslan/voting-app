@@ -18,9 +18,10 @@ pipeline {
             steps {
                 dir('web-app') {
                     script {
-                        // Build Docker image for web-app using Buildx
+                        // Build multi-platform Docker image for web-app
                         sh '''
-                            docker buildx create --name mybuilder --use || true
+                            docker buildx create --use --name mybuilder || true
+                            docker buildx inspect mybuilder --bootstrap
                             docker buildx build --platform linux/amd64,linux/arm64 -t giladaslan9/web-app:latest --push .
                         '''
                     }
@@ -32,12 +33,22 @@ pipeline {
             steps {
                 dir('backend') {
                     script {
-                        // Build Docker image for backend using Buildx
+                        // Build multi-platform Docker image for backend
                         sh '''
-                            docker buildx create --name mybuilder --use || true
+                            docker buildx create --use --name mybuilder || true
+                            docker buildx inspect mybuilder --bootstrap
                             docker buildx build --platform linux/amd64,linux/arm64 -t giladaslan9/backend:latest --push .
                         '''
                     }
+                }
+            }
+        }
+
+        stage('Push Docker Images') {
+            steps {
+                script {
+                    // Push web-app image (already pushed during build)
+                    // Push backend image (already pushed during build)
                 }
             }
         }
@@ -49,5 +60,10 @@ pipeline {
             sh 'docker rmi giladaslan9/web-app:latest || true'
             sh 'docker rmi giladaslan9/backend:latest || true'
         }
+    }
+    
+        success {
+        // Trigger the "K8s - Connection and Configuration" pipeline
+        build job: 'K8s - Connection and Configuration', wait: false
     }
 }

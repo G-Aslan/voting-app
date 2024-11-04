@@ -6,29 +6,64 @@
     <title>Vote App</title>
     <style>
         body {
-            background-color: #121212;
+            background: linear-gradient(135deg, #4e54c8, #8f94fb);
             color: #ffffff;
-            font-family: Arial, sans-serif;
+            font-family: 'Helvetica Neue', sans-serif;
             text-align: center;
             margin: 0;
-            padding: 20px;
+            padding: 40px;
+            animation: fadeIn 0.5s;
         }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
         button {
             background-color: #ffffff;
-            color: #121212;
+            color: #4e54c8;
             border: none;
-            border-radius: 5px;
-            padding: 10px 20px;
-            margin: 5px;
+            border-radius: 25px;
+            padding: 15px 30px;
+            margin: 10px;
             cursor: pointer;
-            transition: background-color 0.3s, color 0.3s;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s, transform 0.3s;
         }
+
         button:hover {
-            background-color: #cccccc;
-            color: #121212;
+            background-color: #f0f0f0;
+            transform: translateY(-2px);
         }
+
+        h2 {
+            margin-top: 40px;
+            font-size: 2rem;
+        }
+
         #results {
             margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        #results p {
+            font-size: 1.5rem;
+            margin: 10px 0;
+            transition: color 0.3s;
+        }
+
+        #results p:hover {
+            color: #ffa500;
         }
     </style>
     <script>
@@ -38,7 +73,12 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ vote: option }),
             }).then(response => {
-                alert('Vote submitted!');
+                if (response.ok) {
+                    alert('Vote submitted!');
+                    getResults(); // Refresh results after voting
+                } else {
+                    alert('Error submitting vote. Please try again.');
+                }
             });
         }
 
@@ -47,12 +87,15 @@
                 .then(response => response.json())
                 .then(data => {
                     const resultsDiv = document.getElementById('results');
-                    resultsDiv.innerHTML = '';
-                    for (const result of data) {
+                    resultsDiv.innerHTML = ''; // Clear previous results
+                    data.forEach(result => {
                         const p = document.createElement('p');
                         p.textContent = `${result.option}: ${result.count} votes`;
                         resultsDiv.appendChild(p);
-                    }
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching results:', error);
                 });
         }
     </script>

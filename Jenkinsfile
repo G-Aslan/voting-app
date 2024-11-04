@@ -18,8 +18,11 @@ pipeline {
             steps {
                 dir('web-app') {
                     script {
-                        // Build Docker image for web-app
-                        sh 'docker build -t giladaslan9/web-app:latest .'
+                        // Build Docker image for web-app using Buildx
+                        sh '''
+                            docker buildx create --name mybuilder --use || true
+                            docker buildx build --platform linux/amd64,linux/arm64 -t giladaslan9/web-app:latest --push .
+                        '''
                     }
                 }
             }
@@ -29,20 +32,12 @@ pipeline {
             steps {
                 dir('backend') {
                     script {
-                        // Build Docker image for backend
-                        sh 'docker build -t giladaslan9/backend:latest .'
+                        // Build Docker image for backend using Buildx
+                        sh '''
+                            docker buildx create --name mybuilder --use || true
+                            docker buildx build --platform linux/amd64,linux/arm64 -t giladaslan9/backend:latest --push .
+                        '''
                     }
-                }
-            }
-        }
-
-        stage('Push Docker Images') {
-            steps {
-                script {
-                    // Push web-app image
-                    sh 'docker push giladaslan9/web-app:latest'
-                    // Push backend image
-                    sh 'docker push giladaslan9/backend:latest'
                 }
             }
         }

@@ -80,7 +80,7 @@ pipeline {
         }
         failure {
             // Notify team on failure (e.g., Slack, email)
-            // Add your notification logic here
+            echo 'Build failed! Please check the console output for more details.'
         }
     }
 }

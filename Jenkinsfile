@@ -42,8 +42,8 @@ pipeline {
             sh 'docker rmi giladaslan9/backend:latest || true'
         }
         success {
-            // Trigger the "K8s - Connection and Configuration" pipeline
-            build job: 'K8s - Connection and Configuration', wait: false
+            // Trigger the "Approval" pipeline
+            build job: 'Approval', wait: false
         }
     }
 }

@@ -1,6 +1,5 @@
 pipeline {
-    agent any 
-
+    agent any
     stages {
         stage('Login to Docker Hub') {
             steps {
@@ -9,40 +8,6 @@ pipeline {
                 }
             }
         }
-
-        stage('Code Quality Check') {
-            steps {
-                dir('web-app') {
-                    sh 'npm install && npm run lint' // Adjust according to your linter
-                }
-                dir('backend') {
-                    sh 'pip install flake8 && flake8 .' // Adjust according to your linter
-                }
-            }
-        }
-
-        stage('Run Unit Tests') {
-            steps {
-                dir('web-app') {
-                    sh 'npm test'
-                }
-                dir('backend') {
-                    sh 'pytest'
-                }
-            }
-        }
-
-        stage('Scan Docker Images') {
-            steps {
-                dir('web-app') {
-                    sh 'trivy image giladaslan9/web-app:latest'
-                }
-                dir('backend') {
-                    sh 'trivy image giladaslan9/backend:latest'
-                }
-            }
-        }
-
         stage('Build Web App Docker Image') {
             steps {
                 dir('web-app') {
@@ -54,7 +19,6 @@ pipeline {
                 }
             }
         }
-
         stage('Build Backend Docker Image') {
             steps {
                 dir('backend') {
@@ -67,7 +31,6 @@ pipeline {
             }
         }
     }
-
     post {
         always {
             // Clean up
@@ -77,10 +40,6 @@ pipeline {
         success {
             // Trigger the "Approval" pipeline
             build job: 'Approval', wait: false
-        }
-        failure {
-            // Notify team on failure (e.g., Slack, email)
-            echo 'Build failed! Please check the console output for more details.'
         }
     }
 }

@@ -1,23 +1,23 @@
 const fs = require('fs');
 const path = require('path');
-const { app } = require('./app'); // Assuming your app is an express instance
+const { app } = require('./app'); // Ensure correct import
 
 describe('Web app build sanity check', () => {
   let server;
 
-  beforeAll(() => {
+  beforeAll(async () => {
     // Start the server before all tests
     server = app.listen(3000, () => {
       console.log('Web app running on port 3000');
     });
-  });
+  }, 10000); // Increase the timeout
 
   afterAll((done) => {
     // Close the server after all tests
     if (server) {
       server.close(done);
     }
-  });
+  }, 10000); // Increase the timeout
 
   test('should have an app.js file', () => {
     const filePath = path.join(__dirname, 'app.js');

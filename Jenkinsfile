@@ -8,6 +8,22 @@ pipeline {
                 }
             }
         }
+        stage('Test Web App') {
+            steps {
+                dir('web-app') {
+                    sh 'npm install'
+                    sh 'npm test'  // Run tests for the web app
+                }
+            }
+        }
+        stage('Test Backend') {
+            steps {
+                dir('backend') {
+                    sh 'npm install'
+                    sh 'npm test'  // Run tests for the backend
+                }
+            }
+        }
         stage('Build Web App Docker Image') {
             steps {
                 dir('web-app') {
@@ -33,12 +49,10 @@ pipeline {
     }
     post {
         always {
-            // Clean up
             sh 'docker rmi giladaslan9/web-app:latest || true'
             sh 'docker rmi giladaslan9/backend:latest || true'
         }
         success {
-            // Trigger the "Approval" pipeline
             build job: 'Approval', wait: false
         }
     }

@@ -1,24 +1,22 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const { Pool } = require('pg');
+const path = require('path');  // Require the path module to handle file paths
 const app = express();
 
 app.use(bodyParser.json());
 
+// Serve static files from the 'web-app' directory
+app.use('/web-app', express.static(path.join(__dirname, 'web-app')));
+
 const pool = new Pool({
     user: process.env.POSTGRES_USER,
-    host: 'db',  // Updated host to match the service name
+    host: 'db',
     database: 'votes',
     password: process.env.POSTGRES_PASSWORD,
     port: 5432,
 });
 
-// Root route to handle the test case
-app.get('/', (req, res) => {
-    res.status(200).send('Backend is running');
-});
-
-// Vote route to handle POST requests
 app.post('/vote', async (req, res) => {
     const vote = req.body.vote;
     try {
@@ -30,7 +28,6 @@ app.post('/vote', async (req, res) => {
     }
 });
 
-// Results route to handle GET requests
 app.get('/results', async (req, res) => {
     console.log('Results request received');
     try {

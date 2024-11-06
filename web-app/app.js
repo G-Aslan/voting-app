@@ -5,8 +5,9 @@ const app = express();
 // Serve static files from the 'web-app' directory
 app.use('/web-app', express.static(path.join(__dirname, 'web-app')));
 
+// Redirect the root URL to the vote.html page
 app.get('/', (req, res) => {
-    res.status(200).send('Web app is running');
+    res.redirect('/web-app/vote.html'); // Redirect root to vote.html
 });
 
 const server = app.listen(3000, () => {

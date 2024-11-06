@@ -11,7 +11,8 @@ pipeline {
         stage('Test Web App') {
             steps {
                 dir('web-app') {
-                    sh 'npm install'
+                    sh 'npm install'  // Install all dependencies
+                    sh 'npm install --save-dev supertest'  // Ensure supertest is installed for tests
                     sh 'npm test'  // Run tests for the web app
                 }
             }
@@ -19,8 +20,10 @@ pipeline {
         stage('Test Backend') {
             steps {
                 dir('backend') {
-                    sh 'npm install'
-                    sh 'npm test'  // Run tests for the backend
+                    sh 'npm install'  // Install all dependencies for backend
+                    // If there are no tests in the backend, you can skip npm test for now
+                    // or add backend-specific tests when needed.
+                    sh 'npm test'  // Run tests for the backend (if any)
                 }
             }
         }

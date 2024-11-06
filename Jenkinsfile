@@ -21,6 +21,7 @@ pipeline {
             steps {
                 dir('backend') {
                     sh 'npm install'
+                    sh 'npm install --save-dev supertest' // Ensure supertest is installed
                     sh 'npm test'  // Run tests for the backend
                 }
             }

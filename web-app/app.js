@@ -1,13 +1,14 @@
 const express = require('express');
+const path = require('path');
 const app = express();
 const port = 3000;
 
-// Basic route to test
+// Serve static files from the current directory
+app.use(express.static(path.join(__dirname)));
+
+// Serve the vote.html file when accessing the root route
 app.get('/', (req, res) => {
-  // If you expect a redirect, you can uncomment the following line
-  // return res.redirect(302, '/login');
-  
-  res.status(200).send('Hello World');
+  res.sendFile(path.join(__dirname, 'vote.html'));
 });
 
 // Start the server

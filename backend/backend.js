@@ -13,6 +13,12 @@ const pool = new Pool({
     port: 5432,
 });
 
+// Root route to handle the test case
+app.get('/', (req, res) => {
+    res.status(200).send('Backend is running');
+});
+
+// Vote route to handle POST requests
 app.post('/vote', async (req, res) => {
     const vote = req.body.vote;
     try {
@@ -24,6 +30,7 @@ app.post('/vote', async (req, res) => {
     }
 });
 
+// Results route to handle GET requests
 app.get('/results', async (req, res) => {
     console.log('Results request received');
     try {

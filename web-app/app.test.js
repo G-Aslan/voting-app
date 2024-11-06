@@ -1,5 +1,5 @@
 const request = require('supertest');
-const { app, server } = require('./app');  // Assuming the server is exported from app.js
+const { app, server } = require('./app');  // Import both app and server
 
 describe('Web app build sanity check', () => {
     it('should have an app.js file', () => {
@@ -16,7 +16,7 @@ describe('Web app build sanity check', () => {
     });
 });
 
-// Clean up by closing the server after all tests are done
+// Close the server after all tests are done
 afterAll(() => {
-    server.close();  // Close the server after tests are done
+    server.close();  // Properly close the server to avoid open handles
 });

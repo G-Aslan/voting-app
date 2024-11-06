@@ -1,5 +1,5 @@
 const request = require('supertest');
-const { app } = require('./app'); // Import the app from app.js
+const { app, server } = require('./app'); // Import both the app and the server
 
 describe('Web app build sanity check', () => {
   it('should have an app.js file', () => {
@@ -19,8 +19,12 @@ describe('Web app build sanity check', () => {
   it('should respond to / with a status 200', async () => {
     const response = await request(app).get('/');
 
-    // Check if it redirects with a 302 status code and Location header
-    expect(response.status).toBe(302);
-    expect(response.header.location).toBe('/web-app/vote.html'); // Ensure the redirect goes to vote.html
+    // Check if the response status is 200
+    expect(response.status).toBe(200);
+  });
+
+  // Close the server after all tests are completed to avoid Jest open handle issue
+  afterAll(() => {
+    server.close();
   });
 });

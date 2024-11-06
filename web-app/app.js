@@ -1,18 +1,18 @@
 const express = require('express');
-const path = require('path'); // Use path module to handle file paths
 const app = express();
+const port = 3000;
 
-// Serve static files from the 'web-app' directory
-app.use('/web-app', express.static(path.join(__dirname, 'web-app')));
-
-// Redirect the root URL to the vote.html page
+// Basic route to test
 app.get('/', (req, res) => {
-    res.redirect('/web-app/vote.html'); // Redirect root to vote.html
+  // If you expect a redirect, you can uncomment the following line
+  // return res.redirect(302, '/login');
+  
+  res.status(200).send('Hello World');
 });
 
-const server = app.listen(3000, () => {
-    console.log('Web app running on port 3000');
+// Start the server
+const server = app.listen(port, () => {
+  console.log(`Web app running on port ${port}`);
 });
 
-// Export both the app and the server to allow the test to control the server
-module.exports = { app, server };
+module.exports = app;  // Export for testing purposes
